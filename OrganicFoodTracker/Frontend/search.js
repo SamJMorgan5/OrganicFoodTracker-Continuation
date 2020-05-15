@@ -15,7 +15,7 @@ App = {
     if (typeof web3 !== 'undefined') {
 			web3 = new Web3(web3.currentProvider);
 		} else {
-			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+			web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
 		}
 
   },
@@ -578,7 +578,7 @@ App = {
 		],
 		"name": "SendProduct",
 		"type": "event"}] //defines functions within farm contract
-    const farmAddress = '0xBbA0131cb4b6200e8607EcC49f1C021b5EEdf916' //contract address
+    const farmAddress = '0xE048141BaBB9c0853BF426859A57146aB7EE60e0' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -898,7 +898,7 @@ App = {
 		"name": "ProductSent",
 		"type": "event"
 	}] //defines functions within processor contract
-    const processorAddress = '0x11b804176f9769Bf1eB36444faB2e06C0df71F1F' //contract address
+    const processorAddress = '0x373BeA6a73F5c13C23EA3E916da9D10eFAe4EA59' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
 
@@ -1148,7 +1148,7 @@ App = {
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"}] //defines functions within retailer contract
-    const retailerAddress = '0x98F63470C593962db5C00746599367D40062A573' //contract address
+    const retailerAddress = '0xE1bFE4a075a5EBaC558B54079Cd8dAbAf25dc067' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
 

@@ -20,7 +20,7 @@ App = {
     if (typeof web3 !== 'undefined') {
 			web3 = new Web3(web3.currentProvider);
 		} else {
-			web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+			web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
 		}
   },
 
@@ -583,7 +583,7 @@ App = {
 		"type": "event"
 	}
 ] //defines functions within farm contract
-    const farmAddress = '0x7dDd4C7c9C73b6d36F29a336b3CD617AB5671de2' //contract address
+    const farmAddress = '0xE048141BaBB9c0853BF426859A57146aB7EE60e0' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
