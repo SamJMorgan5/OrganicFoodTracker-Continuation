@@ -8,21 +8,24 @@ pragma solidity ^0.4.20;
 contract Processor {
     
     //Structure defining a product
-    struct Product {
+    struct Inventory {
+        uint productId;
         uint weight;
-        uint8 allocated; //0 = not allocated, 1 = allocated
+        address farmerAddress;//sender of product
         address processorAddress; //owner of product 
     }
     
-    mapping (uint => Product) products; //all products stored here with productId as index
+    mapping (uint => Inventory) inventory; //all products stored here with productId as index
     
-    uint latestProductId = 0; 
+    
+    uint latestIntermediateId = 0; 
     uint label = 0;
     
     //Structure defining a processor
     struct Processor {
         string name;
         uint8 allocated;
+        uint[] intermediateLUT; //look up table to js doesn't have to search through all the inventory
     }
     
     mapping (address => Processor) processors; //all processors stored here with address as index
@@ -35,29 +38,28 @@ contract Processor {
     function createProcessor(string memory _name) public {
         require (processors[msg.sender].allocated == 0, "Already exists");
         processorsLUT.push(msg.sender); //add current address of message sender to the processors look up table 
-        processors[msg.sender] = Processor(_name, 1); //initalise procesor object and store in farmers array
+        uint[] memory productsTMP; //initialise empty array of products 
+        processors[msg.sender] = Processor(_name, 1, productsTMP); //initalise procesor object and store in farmers array
         emit CreateProcessor(_name);
     }
     
     function recieveProduct(address _sender, uint _productId, uint _weight) public {
         require (processors[msg.sender].allocated == 1, "Processor doesn't exist");
         //If product doesn't exist create new product otherwise add weight to already existing product
-        if (products[_productId].allocated == 0) {
-            products[_productId] = Product(_weight, 1, msg.sender);
-            latestProductId = _productId;
-        } else {
-            products[_productId].weight = products[_productId].weight + _weight;
-        }
+        latestIntermediateId++;
+        inventory[latestIntermediateId] = Inventory(_productId, _weight, _sender, msg.sender);
+        processors[msg.sender].intermediateLUT.push(latestIntermediateId);
         emit ProductRecieved(_sender, msg.sender, _productId, _weight, block.timestamp);
         
     }
     
-    function sendProduct(address _reciever, uint _productId, uint _weight) public {
+    function sendProduct(address _reciever, uint _intermediateId, uint _weight) public {
         require (processors[msg.sender].allocated == 1, "Processor doesn't exist");
-        require (products[_productId].weight > 0, "Not in stock");
-        products[_productId].weight = products[_productId].weight - _weight; //removes weight sent from current weight
+        require(inventory[_intermediateId].processorAddress == msg.sender, "You do not own this product");
+        require (inventory[_intermediateId].weight > 0, "Not in stock");
+        inventory[_intermediateId].weight = inventory[_intermediateId].weight - _weight; //removes weight sent from current weight
         label = label + 1; //iterates the label so that eaxh label is unique
-        emit ProductSent(msg.sender, _reciever, label, _productId, _weight, block.timestamp);
+        emit ProductSent(msg.sender, _reciever, label, _intermediateId, _weight, block.timestamp);
     }
     
     //Product Getters---------------------------------------------------------------------------
@@ -65,24 +67,24 @@ contract Processor {
         return processors[_processorAddress].name;
     }
     
-    function getLatestProductId()  external view returns (uint) {
-        return latestProductId;    
-    }
-    
     function getLatestLabel()  external view returns (uint) {
         return label;    
     }
     
     function getProductProcessorAddress(uint _id) external view returns (address) {
-        return products[_id].processorAddress;
+        return inventory[_id].processorAddress;
     }
     
     function getProductWeight(uint _id) external view returns (uint) {
-        return products[_id].weight;
+        return inventory[_id].weight;
     }
     
-    function getAllocated(uint _id) external view returns (uint) {
-        return products[_id].allocated;
+    function getNumberOfProducts(address _processorAddress) external view returns (uint) {
+        return processors[_processorAddress].intermediateLUT.length;
+    }
+    
+    function getProductId(uint _id) external view returns (uint) {
+        return inventory[_id].productId;
     }
     //End Product Getters----------------------------------------------------------------------
     
@@ -102,6 +104,10 @@ contract Processor {
     
     function getProcessorName(address _processorAddress) external view returns (string) {
         return processors[_processorAddress].name;
+    }
+    
+    function getIntermediateLUT(address _processorAddress) external view returns (uint[]) {
+        return processors[_processorAddress].intermediateLUT;
     }
     //End Processor Getters------------------------------------------------------------------
     
