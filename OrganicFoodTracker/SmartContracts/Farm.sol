@@ -11,7 +11,6 @@ contract Farm {
     
     //Structure defining a product
     struct Product {
-        uint productId;
         string typeStr; //type is either Livestock or Produce
         string name;
         uint weight; //weight in grams 
@@ -25,7 +24,6 @@ contract Farm {
     
     //Structure defining organic properties for produce
     struct OrganicPropertiesProduce { 
-        uint productId;
         string pesticideUsed;
         string fertilisersUsed;
     }
@@ -34,7 +32,6 @@ contract Farm {
     
     //Structure defining organic properties for Livestock
     struct OrganicPropertiesLivestock {
-        uint productId;
         uint timeSpentOutdoors; //measured in minutes
         string feedUsed;
         string housing;
@@ -46,7 +43,6 @@ contract Farm {
     
     //Structure defining a farmer 
     struct Farm {
-        address farmer; 
         string name;
         uint[] certifications; //stores id of certifications that the farmer owns
         uint8 allocated; //0 = not allocated, 1 = allocated
@@ -57,7 +53,6 @@ contract Farm {
     
     //Defining governing body which is used to distribute certifications
     struct GoverningBody {
-        address governingAddress;
         string name;
         uint[] certificationIds;
         uint allocated; //0 = not allocated, 1 = allocated
@@ -68,7 +63,6 @@ contract Farm {
     
     //Structure defining a certificate
     struct Certification {
-        uint certificationId;
         string name;
     }
     
@@ -83,32 +77,34 @@ contract Farm {
     
     constructor() public {
         //Hard codes a Governing Body Quality Welsh Food Certification Ltd (GB-ORG-13)
-        certifications[0] = Certification(numberOfCertifications++, "FAWL");
-        certifications[1] = Certification(numberOfCertifications++, "Welsh Organic Scheme");
-        certifications[2] = Certification(numberOfCertifications++, "Dairy Assurance");
+        certifications[0] = Certification("FAWL");
+        certifications[1] = Certification("Welsh Organic Scheme");
+        certifications[2] = Certification("Dairy Assurance");
         uint[] memory certificationTMP;
-        governingBodies[msg.sender] = GoverningBody(msg.sender, "Quality Welsh Food Certification Ltd", certificationTMP, 1);
-        governingBodies[msg.sender].certificationIds.push(certifications[0].certificationId);
-        governingBodies[msg.sender].certificationIds.push(certifications[1].certificationId);
-        governingBodies[msg.sender].certificationIds.push(certifications[2].certificationId);
+        governingBodies[msg.sender] = GoverningBody("Quality Welsh Food Certification Ltd", certificationTMP, 1);
+        governingBodies[msg.sender].certificationIds.push(0);
+        governingBodies[msg.sender].certificationIds.push(1);
+        governingBodies[msg.sender].certificationIds.push(2);
         
         numberOfGoverningBodies = numberOfGoverningBodies + 1;
     }
     
     function createFarmer(string memory _name) public {
         require (farmers[msg.sender].allocated == 0, "Already exists");
-        uint[] certifications;
+        uint[] certifications; 
         farmersLUT.push(msg.sender); //add current address of message sender to the farmers look up table 
-        farmers[msg.sender] = Farm(msg.sender, _name, certifications, 1); //initalise farmer object and store in farmers array
+        farmers[msg.sender] = Farm(_name, certifications, 1); //initalise farmer object and store in farmers array
         numberFarmers = numberFarmers + 1;
         emit CreateFarmer(_name);
     }
     
+    
+    //TODO deal with typestr (possibly userful for composite products)
     function harvestLivestock(string memory _typeStr, string memory _name, uint _weight, uint _timeSpentOutdoors, string _feedUsed, string _housing) public {
         require (farmers[msg.sender].allocated == 1, "Farmer doesn't exist");
         require (products[numberOfProducts].allocated == 0, "Product already exists");
-        products[numberOfProducts] = Product(numberOfProducts, _typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
-        organicPropertiesLivestock[numberOfProducts] = OrganicPropertiesLivestock(numberOfProducts, _timeSpentOutdoors, _feedUsed, _housing); //initialise organic livesotock properties for the current product
+        products[numberOfProducts] = Product(_typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
+        organicPropertiesLivestock[numberOfProducts] = OrganicPropertiesLivestock(_timeSpentOutdoors, _feedUsed, _housing); //initialise organic livesotock properties for the current product
         numberOfProducts = numberOfProducts + 1;
         emit Harvest(numberOfProducts, _name, _weight, msg.sender, block.timestamp);
     }
@@ -116,8 +112,8 @@ contract Farm {
     function harvestProduce(string memory _typeStr, string memory _name, uint _weight, string _pesticideUsed, string _fertiliserUsed) public {
         require (farmers[msg.sender].allocated == 1, "Farmer doesn't exist");
         require (products[numberOfProducts].allocated == 0, "Product already exists");
-        products[numberOfProducts] = Product(numberOfProducts, _typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
-        organicPropertiesProduce[numberOfProducts] = OrganicPropertiesProduce(numberOfProducts, _pesticideUsed, _fertiliserUsed); //initialise organic produce properties for the current product
+        products[numberOfProducts] = Product(_typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
+        organicPropertiesProduce[numberOfProducts] = OrganicPropertiesProduce(_pesticideUsed, _fertiliserUsed); //initialise organic produce properties for the current product
         numberOfProducts = numberOfProducts + 1;
         emit Harvest(numberOfProducts, _name, _weight, msg.sender, block.timestamp);
     }
