@@ -23,7 +23,7 @@ App = {
 
   loadAccount: async() => {
       const accounts = await web3.eth.getAccounts(); //returns array of accounts
-      App.account = accounts[4];
+      App.account = accounts[2];
   },
 
   loadAllContracts: async() => {
@@ -952,32 +952,6 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"name": "_label",
-				"type": "uint256"
-			},
-			{
-				"name": "_weight",
-				"type": "uint256"
-			}
-		],
-		"name": "recieveProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -1022,6 +996,28 @@ App = {
 		"type": "event"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"name": "_intermediateId",
+				"type": "uint256"
+			},
+			{
+				"name": "_weight",
+				"type": "uint256"
+			}
+		],
+		"name": "recieveProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -1029,11 +1025,30 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getAllocated",
+		"name": "getIntermediateId",
 		"outputs": [
 			{
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_retailerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getLabelLUT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
 			}
 		],
 		"payable": false,
@@ -1058,25 +1073,6 @@ App = {
 		"constant": true,
 		"inputs": [],
 		"name": "getNumberOfRetailers",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_label",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductId",
 		"outputs": [
 			{
 				"name": "",
@@ -1180,8 +1176,10 @@ App = {
 		],
 		"payable": false,
 		"stateMutability": "view",
-		"type": "function"}] //defines functions within retailer contract
-    const retailerAddress = '0xe6BC22e4e9f20E067D79AB3475A38884c44E82A8' //contract address
+		"type": "function"
+	}
+]//defines functions within retailer contract
+    const retailerAddress = '0x9B0A68535B0B51422E0fFe5A4e06f93E5A5D0795' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
 
@@ -1422,17 +1420,15 @@ App = {
 
  recieveProductRetailer: async (data) => {
    //read all values inputted by user in the retailer_homepage.html form
-   let product_id = $('[name="product_id"]').val();
-   let label_id = $('[name="label_id"]').val();
+   let intermediate_id = $('[name="intermediate_id"]').val();
    let weight = $('[name="retailer_weight"]').val();
-   var label_id_int = parseInt(label_id, 10);
-   var product_id_int = parseInt(product_id, 10);
    var weight_int = parseInt(weight, 10);
-   if ((product_id == ""|| weight == "") || isNaN(weight_int) || isNaN(product_id_int) || isNaN(label_id_int)) {
+   var intermediate_id_int = parseInt(intermediate_id);
+   if ((intermediate_id == ""|| weight == "") || isNaN(weight_int) || isNaN(intermediate_id_int)) {
      alert('invalid input');
    } else {
-     let sender = await App.processorContract.methods.getProductProcessorAddress(product_id_int).call(); //get sender address
-     await App.retailerContract.methods.recieveProduct(sender, product_id_int, label_id_int, weight_int).send({from: App.account, gasLimit: 4712388});
+     let sender = await App.processorContract.methods.getProductProcessorAddress(intermediate_id_int).call(); //get sender address
+     await App.retailerContract.methods.recieveProduct(sender, intermediate_id, weight_int).send({from: App.account, gasLimit: 4712388});
      alert('recieved');
    }
  },
@@ -1441,30 +1437,29 @@ App = {
    $('#retailer_inventory').empty(); //removes all products currently on screen
    const numberOfProducts = await App.retailerContract.methods.getLatestLabel().call(); //number of products in the ecosystem
    const currentlyInInventoryTemplate = $('#retailer_inventory'); //template that will hold inventory
-
+   var all_products = await App.retailerContract.methods.getLabelLUT(App.account).call();
    //iterate over all products and getting those that have a weight greater than 0 and belong to the current retailer
-   for (var i = 0; i <= numberOfProducts; i++) {
-     var i_int = parseInt(i, 10);
+   for (var i = 0; i < all_products.length; i++) {
+     var label_id = all_products[i];
      //get current product info
-     const product_weight = await App.retailerContract.methods.getProductWeight(i_int).call();
-     const product_allocated = await App.retailerContract.methods.getAllocated(i_int).call();
-     const product_id = await App.retailerContract.methods.getProductId(i_int).call();
-     var product_id_int = parseInt(product_id, 10);
-     const retailer_address = await App.retailerContract.methods.getProductRetailerAddress(i_int).call();
+     const product_weight = await App.retailerContract.methods.getProductWeight(label_id).call();
+     const intermediate_id = await App.retailerContract.methods.getIntermediateId(label_id).call();
+     const retailer_address = await App.retailerContract.methods.getProductRetailerAddress(label_id).call();
+     var intermediate_id_int = parseInt(intermediate_id, 10);
      var product_weight_int = parseInt(product_weight, 10);
-     var product_allocated_int = parseInt(product_allocated, 10);
      var i_int = parseInt(i, 10);
      if (product_weight_int > 0 && retailer_address == App.account) {
-       let name = await App.farmContract.methods.getProductName(product_id_int).call();
+       let product_id = await App.processorContract.methods.getProductId(intermediate_id_int).call();
+       let name = await App.farmContract.methods.getProductName(product_id).call();
        let weight = product_weight_int;
        //product values to be output to the screen
        let output =
            `<a href="#" class="list-group-item list-group-item-action" data-toggle="list" role="tab">
                <div class="d-flex w-100 justify-content-between">
-                 <h5 class="mb-1" name="product_id">ID: `+ product_id +`</h5>
+                 <h5 class="mb-1" name="product_id">Label ID: `+ label_id +`</h5>
                </div>
-                 <p class="mb-1">Label ID: `+ i_int +`</p>
-                 <p class="mb-1" name="product_id">Name: `+ name +`</p>
+                 <p class="mb-1">Name: `+ name +`</p>
+                 <p class="mb-1" name="product_id">Weight: `+ weight +`</p>
                  <p class="mb-1">Weight: `+ weight +`g</p>
              </a>`;
 

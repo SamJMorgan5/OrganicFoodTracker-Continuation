@@ -8,20 +8,20 @@ pragma solidity ^0.4.20;
 contract Retailer {
     
      //Structure defining a product
-    struct Product {
-        uint productId;
+    struct Inventory {
+        uint intermediateId;
         uint weight; 
-        uint8 allocated; //0 = not allocated, 1 = allocated
         address retailerAddress; //owner of product 
     }
     
     uint latestLabel = 0;
-    mapping (uint => Product) products;  //all products stored here with label as index
+    mapping (uint => Inventory) inventory;  //all products stored here with label as index
 
     //Structure defining a retailer
     struct Retailer {
         string name;
         uint8 allocated; //all products stored here with productId as index
+        uint[] labelLUT; //look up table to js doesn't have to search through all the inventory
     }
     
     mapping (address => Retailer) retailers; //all retailers stored here with address as index
@@ -33,16 +33,17 @@ contract Retailer {
     function createRetailer(string memory _name) public {
         require (retailers[msg.sender].allocated == 0, "Already exists");
         retailersLUT.push(msg.sender);  //add current address of message sender to the retailer look up table 
-        retailers[msg.sender] = Retailer(_name, 1); //initalise retailer object and store in farmers array
+        uint[] memory productsTMP; //initialise empty array of products 
+        retailers[msg.sender] = Retailer(_name, 1, productsTMP); //initalise retailer object and store in farmers array
         emit CreateRetailer(_name);
     }
     
-    function recieveProduct(address _sender, uint _productId, uint _label, uint _weight) public {
+    function recieveProduct(address _sender, uint _intermediateId, uint _weight) public {
         require (retailers[msg.sender].allocated == 1, "Retailer must exist");
-        require (products[_label].allocated == 0, "Product already exists");
-        products[_label] = Product(_productId, _weight, 1, _sender); //crate new product object and store in products mapping
-        latestLabel = _label;
-        emit ProductRecieved(_sender, msg.sender, _label, _weight, block.timestamp);
+        latestLabel++;
+        inventory[latestLabel] = Inventory(_intermediateId, _weight, _sender); //crate new product object and store in products mapping
+        retailers[msg.sender].labelLUT.push(latestLabel);
+        emit ProductRecieved(_sender, msg.sender, latestLabel, _weight, block.timestamp);
     }
     
     //product getters --------------------------------------------------------------------------
@@ -51,19 +52,15 @@ contract Retailer {
     }
     
     function getProductWeight(uint _label) external view returns (uint) {
-        return products[_label].weight;
-    }
-    
-    function getAllocated(uint _label) external view returns (uint) {
-        return products[_label].allocated;
+        return inventory[_label].weight;
     }
     
     function getProductRetailerAddress(uint _label) external view returns (address) {
-        return products[_label].retailerAddress;
+        return inventory[_label].retailerAddress;
     }
     
-    function getProductId(uint _label) external view returns (uint) {
-        return products[_label].productId;
+    function getIntermediateId(uint _label) external view returns (uint) {
+        return inventory[_label].intermediateId;
     }
     //end product getters --------------------------------------------------------------------------
     
@@ -83,6 +80,10 @@ contract Retailer {
     
     function getRetailerAddress(uint _count) external view returns (address) {
         return retailersLUT[_count];
+    }
+    
+    function getLabelLUT(address _retailerAddress) external view returns (uint[]) {
+        return retailers[_retailerAddress].labelLUT;
     }
     //end retailer getters -------------------------------------------------------------------------
     
