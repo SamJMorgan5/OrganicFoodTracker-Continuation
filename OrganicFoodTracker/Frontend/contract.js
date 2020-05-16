@@ -1181,7 +1181,7 @@ App = {
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"}] //defines functions within retailer contract
-    const retailerAddress = '0xE1bFE4a075a5EBaC558B54079Cd8dAbAf25dc067' //contract address
+    const retailerAddress = '0xe6BC22e4e9f20E067D79AB3475A38884c44E82A8' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
 
@@ -1357,7 +1357,7 @@ App = {
 
  sendProductProcessor: async (data) => {
    var items = document.getElementsByClassName("list-group-item active"); //get currently activated list item in processor_homepage.html
-   var product_id = items[0].firstChild.nextElementSibling.innerText.slice(4); //slice first 4 characters giving the product_id
+   var product_id = items[0].firstChild.nextElementSibling.innerText.slice(17); //slice first 4 characters giving the product_id
    var product_id_int = parseInt(product_id, 10);
 
    //read all values inputted by user in the processor_homepage.html form
