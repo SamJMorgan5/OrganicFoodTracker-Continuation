@@ -10,7 +10,6 @@ contract Retailer {
      //Structure defining a product
     struct Product {
         uint productId;
-        uint label; //customer will use the label to track their item
         uint weight; 
         uint8 allocated; //0 = not allocated, 1 = allocated
         address retailerAddress; //owner of product 
@@ -21,7 +20,6 @@ contract Retailer {
 
     //Structure defining a retailer
     struct Retailer {
-        address retailer;
         string name;
         uint8 allocated; //all products stored here with productId as index
     }
@@ -35,14 +33,14 @@ contract Retailer {
     function createRetailer(string memory _name) public {
         require (retailers[msg.sender].allocated == 0, "Already exists");
         retailersLUT.push(msg.sender);  //add current address of message sender to the retailer look up table 
-        retailers[msg.sender] = Retailer(msg.sender, _name, 1); //initalise retailer object and store in farmers array
+        retailers[msg.sender] = Retailer(_name, 1); //initalise retailer object and store in farmers array
         emit CreateRetailer(_name);
     }
     
     function recieveProduct(address _sender, uint _productId, uint _label, uint _weight) public {
         require (retailers[msg.sender].allocated == 1, "Retailer must exist");
         require (products[_label].allocated == 0, "Product already exists");
-        products[_label] = Product(_productId, _label, _weight, 1, _sender); //crate new product object and store in products mapping
+        products[_label] = Product(_productId, _weight, 1, _sender); //crate new product object and store in products mapping
         latestLabel = _label;
         emit ProductRecieved(_sender, msg.sender, _label, _weight, block.timestamp);
     }

@@ -9,7 +9,6 @@ contract Processor {
     
     //Structure defining a product
     struct Product {
-        uint productId;
         uint weight;
         uint8 allocated; //0 = not allocated, 1 = allocated
         address processorAddress; //owner of product 
@@ -22,7 +21,6 @@ contract Processor {
     
     //Structure defining a processor
     struct Processor {
-        address processor;
         string name;
         uint8 allocated;
     }
@@ -37,7 +35,7 @@ contract Processor {
     function createProcessor(string memory _name) public {
         require (processors[msg.sender].allocated == 0, "Already exists");
         processorsLUT.push(msg.sender); //add current address of message sender to the processors look up table 
-        processors[msg.sender] = Processor(msg.sender, _name, 1); //initalise procesor object and store in farmers array
+        processors[msg.sender] = Processor(_name, 1); //initalise procesor object and store in farmers array
         emit CreateProcessor(_name);
     }
     
@@ -45,7 +43,7 @@ contract Processor {
         require (processors[msg.sender].allocated == 1, "Processor doesn't exist");
         //If product doesn't exist create new product otherwise add weight to already existing product
         if (products[_productId].allocated == 0) {
-            products[_productId] = Product(_productId, _weight, 1, msg.sender);
+            products[_productId] = Product(_weight, 1, msg.sender);
             latestProductId = _productId;
         } else {
             products[_productId].weight = products[_productId].weight + _weight;
