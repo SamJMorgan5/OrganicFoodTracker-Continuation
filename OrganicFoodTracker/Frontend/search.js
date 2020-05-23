@@ -577,8 +577,9 @@ App = {
 			}
 		],
 		"name": "SendProduct",
-		"type": "event"}] //defines functions within farm contract
-    const farmAddress = '0xE048141BaBB9c0853BF426859A57146aB7EE60e0' //contract address
+		"type": "event"
+	}] //defines functions within farm contract
+    const farmAddress = '0x3Ce570Eaf36E620619552C2CAc02105696884eD9' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -599,34 +600,6 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "getLatestProductId",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getLatestLabel",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"constant": false,
 		"inputs": [
 			{
@@ -634,7 +607,7 @@ App = {
 				"type": "address"
 			},
 			{
-				"name": "_productId",
+				"name": "_intermediateId",
 				"type": "uint256"
 			},
 			{
@@ -646,6 +619,25 @@ App = {
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getNumberOfProducts",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -680,25 +672,6 @@ App = {
 			{
 				"name": "",
 				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getAllocated",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -783,6 +756,25 @@ App = {
 		"constant": true,
 		"inputs": [
 			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductId",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
 				"name": "_count",
 				"type": "uint256"
 			}
@@ -792,6 +784,25 @@ App = {
 			{
 				"name": "",
 				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getIntermediateLUT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
 			}
 		],
 		"payable": false,
@@ -875,11 +886,6 @@ App = {
 				"type": "address"
 			},
 			{
-				"indexed": true,
-				"name": "_label",
-				"type": "uint256"
-			},
-			{
 				"indexed": false,
 				"name": "_productId",
 				"type": "uint256"
@@ -897,116 +903,13 @@ App = {
 		],
 		"name": "ProductSent",
 		"type": "event"
-	}] //defines functions within processor contract
-    const processorAddress = '0x373BeA6a73F5c13C23EA3E916da9D10eFAe4EA59' //contract address
+	}]//defines functions within processor contract
+    const processorAddress = '0x980F36330B4447716aB71D0D207911599694A4a9' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
 
   loadRetailerContract: async() => {
     const retailerAbi = [
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "createRetailer",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"name": "_label",
-				"type": "uint256"
-			},
-			{
-				"name": "_weight",
-				"type": "uint256"
-			}
-		],
-		"name": "recieveProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "CreateRetailer",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "_label",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "weight",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "ProductRecieved",
-		"type": "event"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_label",
-				"type": "uint256"
-			}
-		],
-		"name": "getAllocated",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
 	{
 		"constant": true,
 		"inputs": [],
@@ -1023,8 +926,65 @@ App = {
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfRetailers",
+		"inputs": [
+			{
+				"name": "_retailerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getLabelLUT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "getRetailerName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "createRetailer",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_label",
+				"type": "uint256"
+			}
+		],
+		"name": "getIntermediateId",
 		"outputs": [
 			{
 				"name": "",
@@ -1036,6 +996,28 @@ App = {
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"name": "_intermediateId",
+				"type": "uint256"
+			},
+			{
+				"name": "_weight",
+				"type": "uint256"
+			}
+		],
+		"name": "recieveProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -1043,7 +1025,7 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getProductId",
+		"name": "getProductWeight",
 		"outputs": [
 			{
 				"name": "",
@@ -1075,13 +1057,8 @@ App = {
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_label",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductWeight",
+		"inputs": [],
+		"name": "getNumberOfRetailers",
 		"outputs": [
 			{
 				"name": "",
@@ -1131,27 +1108,52 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "getRetailerName",
-		"outputs": [
-			{
-				"name": "",
+				"indexed": false,
+				"name": "name",
 				"type": "string"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"}] //defines functions within retailer contract
-    const retailerAddress = '0xE1bFE4a075a5EBaC558B54079Cd8dAbAf25dc067' //contract address
+		"name": "CreateRetailer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_label",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "ProductRecieved",
+		"type": "event"
+	}]//defines functions within retailer contract
+    const retailerAddress = '0x70e0CDd95aeAA0BAd1381b323E56eE9dC1177638' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
-
   organicProperties: async() => {
     //gets label value inserted by a user
     var label = $('[name="label"]').val();

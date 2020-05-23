@@ -581,12 +581,10 @@ App = {
 		],
 		"name": "SendProduct",
 		"type": "event"
-	}
-] //defines functions within farm contract
-    const farmAddress = '0xE048141BaBB9c0853BF426859A57146aB7EE60e0' //contract address
+	}] //defines functions within farm contract
+    const farmAddress = '0x3Ce570Eaf36E620619552C2CAc02105696884eD9' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
-
   getCertifications: async () => {
     const certficiationsTemplate = $('#certifications'); //template that will hold all certificates belonging to a governing body
     const governing_body_certificates = await App.farmContract.methods.getGoverningBodiesCertificates(App.account).call();

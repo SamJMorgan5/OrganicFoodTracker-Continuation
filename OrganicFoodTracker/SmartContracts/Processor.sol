@@ -7,7 +7,7 @@ pragma solidity ^0.4.20;
 
 contract Processor {
     
-    //Structure defining a product
+    //Structure defining a product indexed ny intermediateId
     struct Inventory {
         uint productId;
         uint weight;
@@ -18,8 +18,7 @@ contract Processor {
     mapping (uint => Inventory) inventory; //all products stored here with productId as index
     
     
-    uint latestIntermediateId = 0; 
-    uint label = 0;
+    uint latestIntermediateId = 0;
     
     //Structure defining a processor
     struct Processor {
@@ -33,7 +32,7 @@ contract Processor {
 
     event CreateProcessor(string _name);
     event ProductRecieved(address _sender, address _reciever, uint indexed _productId, uint _weight, uint256 time);
-    event ProductSent(address indexed _sender, address indexed _reciever, uint indexed _label, uint _productId, uint _weight, uint256 time);
+    event ProductSent(address indexed _sender, address indexed _reciever, uint _productId, uint _weight, uint256 time);
     
     function createProcessor(string memory _name) public {
         require (processors[msg.sender].allocated == 0, "Already exists");
@@ -58,17 +57,12 @@ contract Processor {
         require(inventory[_intermediateId].processorAddress == msg.sender, "You do not own this product");
         require (inventory[_intermediateId].weight > 0, "Not in stock");
         inventory[_intermediateId].weight = inventory[_intermediateId].weight - _weight; //removes weight sent from current weight
-        label = label + 1; //iterates the label so that eaxh label is unique
-        emit ProductSent(msg.sender, _reciever, label, _intermediateId, _weight, block.timestamp);
+        emit ProductSent(msg.sender, _reciever, _intermediateId, _weight, block.timestamp);
     }
     
     //Product Getters---------------------------------------------------------------------------
     function getProductProcessorName(address _processorAddress) external view returns (string memory) {
         return processors[_processorAddress].name;
-    }
-    
-    function getLatestLabel()  external view returns (uint) {
-        return label;    
     }
     
     function getProductProcessorAddress(uint _id) external view returns (address) {

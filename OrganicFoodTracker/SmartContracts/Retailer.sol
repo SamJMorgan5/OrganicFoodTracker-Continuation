@@ -7,21 +7,21 @@ pragma solidity ^0.4.20;
 
 contract Retailer {
     
-     //Structure defining a product
+     //Structure defining a product owned by a retailer
     struct Inventory {
         uint intermediateId;
         uint weight; 
         address retailerAddress; //owner of product 
     }
     
-    uint latestLabel = 0;
+    uint latestLabelId = 0;
     mapping (uint => Inventory) inventory;  //all products stored here with label as index
 
     //Structure defining a retailer
     struct Retailer {
         string name;
         uint8 allocated; //all products stored here with productId as index
-        uint[] labelLUT; //look up table to js doesn't have to search through all the inventory
+        uint[] labelLUT; //look up table so js doesn't have to search through all the inventory
     }
     
     mapping (address => Retailer) retailers; //all retailers stored here with address as index
@@ -40,15 +40,15 @@ contract Retailer {
     
     function recieveProduct(address _sender, uint _intermediateId, uint _weight) public {
         require (retailers[msg.sender].allocated == 1, "Retailer must exist");
-        latestLabel++;
-        inventory[latestLabel] = Inventory(_intermediateId, _weight, _sender); //crate new product object and store in products mapping
-        retailers[msg.sender].labelLUT.push(latestLabel);
-        emit ProductRecieved(_sender, msg.sender, latestLabel, _weight, block.timestamp);
+        latestLabelId++;
+        inventory[latestLabelId] = Inventory(_intermediateId, _weight, _sender); //crate new product object and store in products mapping
+        retailers[msg.sender].labelLUT.push(latestLabelId);
+        emit ProductRecieved(_sender, msg.sender, latestLabelId, _weight, block.timestamp);
     }
     
     //product getters --------------------------------------------------------------------------
     function getLatestLabel() external view returns (uint) {
-        return latestLabel;    
+        return latestLabelId;    
     }
     
     function getProductWeight(uint _label) external view returns (uint) {

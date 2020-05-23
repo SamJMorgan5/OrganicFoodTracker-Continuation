@@ -42,62 +42,18 @@ App = {
   loadFarmerContract: async() => {
     const farmAbi = [
 	{
-		"constant": false,
-		"inputs": [
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberOfFarmers",
+		"outputs": [
 			{
-				"name": "_name",
-				"type": "string"
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "createFarmer",
-		"outputs": [],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "CreateFarmer",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "weight",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "_farmerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "Harvest",
-		"type": "event"
 	},
 	{
 		"constant": false,
@@ -137,6 +93,60 @@ App = {
 		"constant": false,
 		"inputs": [
 			{
+				"name": "_farmerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_certificationId",
+				"type": "uint256"
+			}
+		],
+		"name": "setFarmCertification",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberOfProducts",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"name": "weight",
+				"type": "uint256"
+			}
+		],
+		"name": "sendProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
 				"name": "_typeStr",
 				"type": "string"
 			},
@@ -164,141 +174,6 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"name": "weight",
-				"type": "uint256"
-			}
-		],
-		"name": "sendProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_farmerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "weight",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "SendProduct",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_farmerAddress",
-				"type": "address"
-			},
-			{
-				"name": "_certificationId",
-				"type": "uint256"
-			}
-		],
-		"name": "setFarmCertification",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getAllocated",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_certificationId",
-				"type": "uint256"
-			}
-		],
-		"name": "getCertificateName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_farmerAddress",
-				"type": "address"
-			}
-		],
-		"name": "getCertificationArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"constant": true,
 		"inputs": [
 			{
@@ -321,11 +196,11 @@ App = {
 		"constant": true,
 		"inputs": [
 			{
-				"name": "_farmerAddress",
-				"type": "address"
+				"name": "_id",
+				"type": "uint256"
 			}
 		],
-		"name": "getFarmerAllocated",
+		"name": "getAllocated",
 		"outputs": [
 			{
 				"name": "",
@@ -337,22 +212,17 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"constant": false,
 		"inputs": [
 			{
-				"name": "_farmerAddress",
-				"type": "address"
-			}
-		],
-		"name": "getFarmerName",
-		"outputs": [
-			{
-				"name": "",
+				"name": "_name",
 				"type": "string"
 			}
 		],
+		"name": "createFarmer",
+		"outputs": [],
 		"payable": false,
-		"stateMutability": "view",
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -382,11 +252,30 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getFertilisersUsed",
+		"name": "getProductWeight",
 		"outputs": [
 			{
-				"name": "memeory",
-				"type": "string"
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getTimeSpentOutdoors",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"payable": false,
@@ -406,110 +295,6 @@ App = {
 			{
 				"name": "",
 				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_governingBodyAddress",
-				"type": "address"
-			}
-		],
-		"name": "getGoverningBodyName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getHousing",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfFarmers",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfProducts",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getPesticidesUsed",
-		"outputs": [
-			{
-				"name": "memeory",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductFarmerAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
 			}
 		],
 		"payable": false,
@@ -562,6 +347,413 @@ App = {
 				"type": "uint256"
 			}
 		],
+		"name": "getFertilisersUsed",
+		"outputs": [
+			{
+				"name": "memeory",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_governingBodyAddress",
+				"type": "address"
+			}
+		],
+		"name": "getGoverningBodyName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_certificationId",
+				"type": "uint256"
+			}
+		],
+		"name": "getCertificateName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_farmerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getFarmerAllocated",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductFarmerAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_farmerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getCertificationArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getHousing",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getPesticidesUsed",
+		"outputs": [
+			{
+				"name": "memeory",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_farmerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getFarmerName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "CreateFarmer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "_farmerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "Harvest",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_farmerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "SendProduct",
+		"type": "event"
+	}] //defines functions within farm contract
+    const farmAddress = '0x3Ce570Eaf36E620619552C2CAc02105696884eD9' //contract address
+    App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
+  },
+
+  loadProcessorContract: async() => {
+    const processorAbi = [
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "createProcessor",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"name": "_intermediateId",
+				"type": "uint256"
+			},
+			{
+				"name": "_weight",
+				"type": "uint256"
+			}
+		],
+		"name": "sendProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getNumberOfProducts",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "getProcessorAllocated",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getProductProcessorName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberOfProcessors",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductProcessorAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"name": "_weight",
+				"type": "uint256"
+			}
+		],
+		"name": "recieveProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
 		"name": "getProductWeight",
 		"outputs": [
 			{
@@ -581,7 +773,7 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getTimeSpentOutdoors",
+		"name": "getProductId",
 		"outputs": [
 			{
 				"name": "",
@@ -591,26 +783,62 @@ App = {
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
-	}
-] //defines functions within farm contract
-    const farmAddress = '0xB79101129aF97Fba7A287e1c8B31e5c03fE2A42d' //contract address
-    App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
-  },
-
-  loadProcessorContract: async() => {
-    const processorAbi = [
+	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
-				"name": "_name",
+				"name": "_count",
+				"type": "uint256"
+			}
+		],
+		"name": "getProcessorAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getIntermediateLUT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getProcessorName",
+		"outputs": [
+			{
+				"name": "",
 				"type": "string"
 			}
 		],
-		"name": "createProcessor",
-		"outputs": [],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -671,11 +899,6 @@ App = {
 				"type": "address"
 			},
 			{
-				"indexed": true,
-				"name": "_label",
-				"type": "uint256"
-			},
-			{
 				"indexed": false,
 				"name": "_productId",
 				"type": "uint256"
@@ -693,346 +916,17 @@ App = {
 		],
 		"name": "ProductSent",
 		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"name": "_weight",
-				"type": "uint256"
-			}
-		],
-		"name": "recieveProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"name": "_intermediateId",
-				"type": "uint256"
-			},
-			{
-				"name": "_weight",
-				"type": "uint256"
-			}
-		],
-		"name": "sendProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getIntermediateLUT",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getLatestLabel",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfProcessors",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getNumberOfProducts",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_count",
-				"type": "uint256"
-			}
-		],
-		"name": "getProcessorAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "getProcessorAllocated",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getProcessorName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductId",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductProcessorAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getProductProcessorName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductWeight",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	}
-]//defines functions within processor contract
-    const processorAddress = '0x31Dc56Dc75240CAE42dCBB8067882177165C623C' //contract address
+	}]//defines functions within processor contract
+    const processorAddress = '0x980F36330B4447716aB71D0D207911599694A4a9' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
 
   loadRetailerContract: async() => {
     const retailerAbi = [
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "createRetailer",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "CreateRetailer",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "_label",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "weight",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "ProductRecieved",
-		"type": "event"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"name": "_intermediateId",
-				"type": "uint256"
-			},
-			{
-				"name": "_weight",
-				"type": "uint256"
-			}
-		],
-		"name": "recieveProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_label",
-				"type": "uint256"
-			}
-		],
-		"name": "getIntermediateId",
+		"inputs": [],
+		"name": "getLatestLabel",
 		"outputs": [
 			{
 				"name": "",
@@ -1064,8 +958,46 @@ App = {
 	},
 	{
 		"constant": true,
-		"inputs": [],
-		"name": "getLatestLabel",
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "getRetailerName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "createRetailer",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_label",
+				"type": "uint256"
+			}
+		],
+		"name": "getIntermediateId",
 		"outputs": [
 			{
 				"name": "",
@@ -1077,9 +1009,36 @@ App = {
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"name": "_intermediateId",
+				"type": "uint256"
+			},
+			{
+				"name": "_weight",
+				"type": "uint256"
+			}
+		],
+		"name": "recieveProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfRetailers",
+		"inputs": [
+			{
+				"name": "_label",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductWeight",
 		"outputs": [
 			{
 				"name": "",
@@ -1111,13 +1070,8 @@ App = {
 	},
 	{
 		"constant": true,
-		"inputs": [
-			{
-				"name": "_label",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductWeight",
+		"inputs": [],
+		"name": "getNumberOfRetailers",
 		"outputs": [
 			{
 				"name": "",
@@ -1167,26 +1121,50 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "getRetailerName",
-		"outputs": [
-			{
-				"name": "",
+				"indexed": false,
+				"name": "name",
 				"type": "string"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	}
-]//defines functions within retailer contract
-    const retailerAddress = '0x9B0A68535B0B51422E0fFe5A4e06f93E5A5D0795' //contract address
+		"name": "CreateRetailer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_label",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "ProductRecieved",
+		"type": "event"
+	}]//defines functions within retailer contract
+    const retailerAddress = '0x70e0CDd95aeAA0BAd1381b323E56eE9dC1177638' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
 
