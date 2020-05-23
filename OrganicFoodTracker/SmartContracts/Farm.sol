@@ -46,6 +46,7 @@ contract Farm {
         string name;
         uint[] certifications; //stores id of certifications that the farmer owns
         uint8 allocated; //0 = not allocated, 1 = allocated
+        uint[] productLUT; //stores id of products owned by farmer
     }
     
     mapping (address => Farm) farmers; //farmers stored here indexed using the farmers address
@@ -91,9 +92,10 @@ contract Farm {
     
     function createFarmer(string memory _name) public {
         require (farmers[msg.sender].allocated == 0, "Already exists");
-        uint[] certifications; 
+        uint[] memory certifications; 
+        uint[] memory productsTMP; //initialise empty array of products 
         farmersLUT.push(msg.sender); //add current address of message sender to the farmers look up table 
-        farmers[msg.sender] = Farm(_name, certifications, 1); //initalise farmer object and store in farmers array
+        farmers[msg.sender] = Farm(_name, certifications, 1, productsTMP); //initalise farmer object and store in farmers array
         numberFarmers = numberFarmers + 1;
         emit CreateFarmer(_name);
     }
@@ -105,6 +107,7 @@ contract Farm {
         require (products[numberOfProducts].allocated == 0, "Product already exists");
         products[numberOfProducts] = Product(_typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
         organicPropertiesLivestock[numberOfProducts] = OrganicPropertiesLivestock(_timeSpentOutdoors, _feedUsed, _housing); //initialise organic livesotock properties for the current product
+        farmers[msg.sender].productLUT.push(numberOfProducts);
         numberOfProducts = numberOfProducts + 1;
         emit Harvest(numberOfProducts, _name, _weight, msg.sender, block.timestamp);
     }
@@ -114,6 +117,7 @@ contract Farm {
         require (products[numberOfProducts].allocated == 0, "Product already exists");
         products[numberOfProducts] = Product(_typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
         organicPropertiesProduce[numberOfProducts] = OrganicPropertiesProduce(_pesticideUsed, _fertiliserUsed); //initialise organic produce properties for the current product
+        farmers[msg.sender].productLUT.push(numberOfProducts);
         numberOfProducts = numberOfProducts + 1;
         emit Harvest(numberOfProducts, _name, _weight, msg.sender, block.timestamp);
     }
@@ -157,6 +161,10 @@ contract Farm {
     
     function getCertificationArray(address _farmerAddress) external view returns (uint[]) {
         return farmers[_farmerAddress].certifications;
+    }
+    
+    function getProductLUT(address _farmerAddress) external view returns (uint[]) {
+        return farmers[_farmerAddress].productLUT;
     }
     //farmer getters end -------------------------------------------------------------------
     

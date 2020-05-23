@@ -35,18 +35,62 @@ App = {
   loadFarmerContract: async() => {
     const farmAbi = [
 	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfFarmers",
-		"outputs": [
+		"constant": false,
+		"inputs": [
 			{
-				"name": "",
+				"name": "_name",
+				"type": "string"
+			}
+		],
+		"name": "createFarmer",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "CreateFarmer",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "_name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"indexed": true,
+				"name": "_farmerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "time",
 				"type": "uint256"
 			}
 		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
+		"name": "Harvest",
+		"type": "event"
 	},
 	{
 		"constant": false,
@@ -86,60 +130,6 @@ App = {
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_farmerAddress",
-				"type": "address"
-			},
-			{
-				"name": "_certificationId",
-				"type": "uint256"
-			}
-		],
-		"name": "setFarmCertification",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfProducts",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"name": "weight",
-				"type": "uint256"
-			}
-		],
-		"name": "sendProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
 				"name": "_typeStr",
 				"type": "string"
 			},
@@ -167,6 +157,141 @@ App = {
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"name": "weight",
+				"type": "uint256"
+			}
+		],
+		"name": "sendProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "_farmerAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"name": "_productId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "weight",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "SendProduct",
+		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_farmerAddress",
+				"type": "address"
+			},
+			{
+				"name": "_certificationId",
+				"type": "uint256"
+			}
+		],
+		"name": "setFarmCertification",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getAllocated",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_certificationId",
+				"type": "uint256"
+			}
+		],
+		"name": "getCertificateName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_farmerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getCertificationArray",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -189,11 +314,11 @@ App = {
 		"constant": true,
 		"inputs": [
 			{
-				"name": "_id",
-				"type": "uint256"
+				"name": "_farmerAddress",
+				"type": "address"
 			}
 		],
-		"name": "getAllocated",
+		"name": "getFarmerAllocated",
 		"outputs": [
 			{
 				"name": "",
@@ -205,17 +330,22 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"constant": true,
 		"inputs": [
 			{
-				"name": "_name",
+				"name": "_farmerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getFarmerName",
+		"outputs": [
+			{
+				"name": "",
 				"type": "string"
 			}
 		],
-		"name": "createFarmer",
-		"outputs": [],
 		"payable": false,
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -245,7 +375,92 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getProductWeight",
+		"name": "getFertilisersUsed",
+		"outputs": [
+			{
+				"name": "memeory",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_governingBodyAddress",
+				"type": "address"
+			}
+		],
+		"name": "getGoverningBodiesCertificates",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_governingBodyAddress",
+				"type": "address"
+			}
+		],
+		"name": "getGoverningBodyName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getHousing",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberOfFarmers",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberOfProducts",
 		"outputs": [
 			{
 				"name": "",
@@ -264,11 +479,11 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getTimeSpentOutdoors",
+		"name": "getPesticidesUsed",
 		"outputs": [
 			{
-				"name": "",
-				"type": "uint256"
+				"name": "memeory",
+				"type": "string"
 			}
 		],
 		"payable": false,
@@ -279,11 +494,30 @@ App = {
 		"constant": true,
 		"inputs": [
 			{
-				"name": "_governingBodyAddress",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductFarmerAddress",
+		"outputs": [
+			{
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "getGoverningBodiesCertificates",
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_farmerAddress",
+				"type": "address"
+			}
+		],
+		"name": "getProductLUT",
 		"outputs": [
 			{
 				"name": "",
@@ -340,64 +574,7 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getFertilisersUsed",
-		"outputs": [
-			{
-				"name": "memeory",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_governingBodyAddress",
-				"type": "address"
-			}
-		],
-		"name": "getGoverningBodyName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_certificationId",
-				"type": "uint256"
-			}
-		],
-		"name": "getCertificateName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_farmerAddress",
-				"type": "address"
-			}
-		],
-		"name": "getFarmerAllocated",
+		"name": "getProductWeight",
 		"outputs": [
 			{
 				"name": "",
@@ -416,176 +593,19 @@ App = {
 				"type": "uint256"
 			}
 		],
-		"name": "getProductFarmerAddress",
+		"name": "getTimeSpentOutdoors",
 		"outputs": [
 			{
 				"name": "",
-				"type": "address"
+				"type": "uint256"
 			}
 		],
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_farmerAddress",
-				"type": "address"
-			}
-		],
-		"name": "getCertificationArray",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getHousing",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getPesticidesUsed",
-		"outputs": [
-			{
-				"name": "memeory",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_farmerAddress",
-				"type": "address"
-			}
-		],
-		"name": "getFarmerName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "CreateFarmer",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "_name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "weight",
-				"type": "uint256"
-			},
-			{
-				"indexed": true,
-				"name": "_farmerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "Harvest",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_farmerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"name": "_productId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "weight",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "SendProduct",
-		"type": "event"
-	}] //defines functions within farm contract
-    const farmAddress = '0x3Ce570Eaf36E620619552C2CAc02105696884eD9' //contract address
+	}
+]
+    const farmAddress = '0x25C3bdAD900100019Af2a50eDEd48764683CD69D' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -909,7 +929,7 @@ App = {
 		],
 		"name": "ProductSent",
 		"type": "event"
-	}]//defines functions within processor contract
+	}]
     const processorAddress = '0x980F36330B4447716aB71D0D207911599694A4a9' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
@@ -1156,7 +1176,7 @@ App = {
 		],
 		"name": "ProductRecieved",
 		"type": "event"
-	}]//defines functions within retailer contract
+	}]
     const retailerAddress = '0x70e0CDd95aeAA0BAd1381b323E56eE9dC1177638' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
@@ -1278,43 +1298,37 @@ App = {
     }
   },
 
+ getHarvestedProducts: async (data) => {
+   $('#currently_harvested').empty(); //removes all products currently on screen
+   const currentlyHarvestedTemplate = $('#currently_harvested'); //template that will hold individual harvested products
+   var all_products = await App.farmContract.methods.getProductLUT(App.account).call();
+   //iterate over all products and getting those that have a weight greater than 0 and belong to the current farmer
+   for (var i = 0; i < all_products.length; i++) {
+     var product_id = all_products[i];
+     //get current product info
+     const product_weight = await App.farmContract.methods.getProductWeight(product_id).call();
+     const product_allocated = await App.farmContract.methods.getAllocated(product_id).call();
+     const farmer_address = await App.farmContract.methods.getProductFarmerAddress(product_id).call();
 
+     if (product_weight > 0) {
+       let name = await App.farmContract.methods.getProductName(i).call();
+       let weight = product_weight;
+       //product values to be output to the screen
+       let output =
+           `<a href="#" class="list-group-item list-group-item-action" data-toggle="list" role="tab">
+               <div class="d-flex w-100 justify-content-between">
+                 <h5 class="mb-1" name="product_id">ID: `+ product_id +`</h5>
+               </div>
+                 <p class="mb-1" name="product_id">Name: `+ name +`</p>
+                 <p class="mb-1">Weight: `+ weight +`g</p>
+             </a>`;
 
-  getHarvestedProducts: async (data) => {
-    $('#currently_harvested').empty(); //removes all products currently on screen
-    //$( ".currentlyHarvested" ).remove();s
-    const numberOfProducts = await App.farmContract.methods.getNumberOfProducts().call(); //number of products in the ecosystem
-    const currentlyHarvestedTemplate = $('#currently_harvested'); //template that will hold individual harvested products
+         currentlyHarvestedTemplate.append(output);
 
-    //iterate over all products and getting those that have a weight greater than 0 and belong to the current farmer
-    for (var i = 0; i < numberOfProducts; i++) {
-      var i_int = parseInt(i, 10);
-      //get current product info
-      const product_weight = await App.farmContract.methods.getProductWeight(i_int).call();
-      const product_allocated = await App.farmContract.methods.getAllocated(i_int).call();
-      const farmer_address = await App.farmContract.methods.getProductFarmerAddress(i_int).call();
+     }
+   }
+},
 
-      var product_weight_int = parseInt(product_weight, 10);
-      var product_allocated_int = parseInt(product_allocated, 10);
-      if (product_weight_int > 0 && farmer_address == App.account) {
-        let product_id = i_int;
-        let name = await App.farmContract.methods.getProductName(i_int).call();
-        let weight = product_weight_int;
-        //product values to be output to the screen
-        let output =
-            `<a href="#" class="list-group-item list-group-item-action" data-toggle="list" role="tab">
-                <div class="d-flex w-100 justify-content-between">
-                  <h5 class="mb-1" name="product_id">ID: `+ product_id +`</h5>
-                </div>
-                  <p class="mb-1" name="product_id">Name: `+ name +`</p>
-                  <p class="mb-1">Weight: `+ weight +`g</p>
-              </a>`;
-
-          currentlyHarvestedTemplate.append(output);
-
-      }
-    }
- },
 
  recieveProductProcessor: async (data) => {
    //read all values inputted by user in the processor_homepage.html form
@@ -1409,7 +1423,7 @@ App = {
 
  getRetailerInventory: async (data) => {
    $('#retailer_inventory').empty(); //removes all products currently on screen
-   const numberOfProducts = await App.retailerContract.methods.getLatestLabel().call(); //number of products in the ecosystem
+
    const currentlyInInventoryTemplate = $('#retailer_inventory'); //template that will hold inventory
    var all_products = await App.retailerContract.methods.getLabelLUT(App.account).call();
    //iterate over all products and getting those that have a weight greater than 0 and belong to the current retailer
