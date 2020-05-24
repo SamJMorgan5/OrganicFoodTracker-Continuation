@@ -605,7 +605,7 @@ App = {
 		"type": "function"
 	}
 ]
-    const farmAddress = '0x25C3bdAD900100019Af2a50eDEd48764683CD69D' //contract address
+    const farmAddress = '0xE131253467bFe85b089851e1D2C511a7F8f5E345' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -930,7 +930,7 @@ App = {
 		"name": "ProductSent",
 		"type": "event"
 	}]
-    const processorAddress = '0x980F36330B4447716aB71D0D207911599694A4a9' //contract address
+    const processorAddress = '0x476e3c1996d9d26197638b720F35C4a9f4cDaC50' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
 
@@ -1177,7 +1177,7 @@ App = {
 		"name": "ProductRecieved",
 		"type": "event"
 	}]
-    const retailerAddress = '0x70e0CDd95aeAA0BAd1381b323E56eE9dC1177638' //contract address
+    const retailerAddress = '0x0C3FC850f86Ea6A3338536a64825E17E119b920E' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
 
@@ -1300,7 +1300,7 @@ App = {
 
  getHarvestedProducts: async (data) => {
    $('#currently_harvested').empty(); //removes all products currently on screen
-   const currentlyHarvestedTemplate = $('#currently_harvested'); //template that will hold individual harvested products
+   const currently_harvested_template = $('#currently_harvested'); //template that will hold individual harvested products
    var all_products = await App.farmContract.methods.getProductLUT(App.account).call();
    //iterate over all products and getting those that have a weight greater than 0 and belong to the current farmer
    for (var i = 0; i < all_products.length; i++) {
@@ -1323,12 +1323,11 @@ App = {
                  <p class="mb-1">Weight: `+ weight +`g</p>
              </a>`;
 
-         currentlyHarvestedTemplate.append(output);
+         currently_harvested_template.append(output);
 
      }
    }
 },
-
 
  recieveProductProcessor: async (data) => {
    //read all values inputted by user in the processor_homepage.html form
@@ -1376,7 +1375,7 @@ App = {
 
  getProcessorInventory: async (data) => {
    $('#processor_inventory').empty(); //removes all products currently on screen
-   const currentlyInInventoryTemplate = $('#processor_inventory'); //template that will hold inventory
+   const currently_in_inventory_template = $('#processor_inventory'); //template that will hold inventory
    var all_products = await App.processorContract.methods.getIntermediateLUT(App.account).call();
    //iterate over all products and getting those that have a weight greater than 0 and belong to the current processor
    for (var i = 0; i < all_products.length; i++) {
@@ -1392,15 +1391,15 @@ App = {
        let output =
            `<a href="#" class="list-group-item list-group-item-action" data-toggle="list" role="tab">
                <div class="d-flex w-100 justify-content-between">
-                 <h5 class="mb-1" name="product_id">Intermediate ID: `+ intermediate_id +`</h5>
+                 <h5 class="mb-1">Intermediate ID: `+ intermediate_id +`</h5>
                </div>
-                 <p class="mb-1" name="name">Name: `+ name +`</p>
-                 <p class="mb-1" name="product_id">Product ID: `+ product_id +`</p>
+                 <p class="mb-1">Name: `+ name +`</p>
+                 <p class="mb-1">Product ID: `+ product_id +`</p>
                  <p class="mb-1">Weight: `+ product_weight +`g</p>
                  <p class="mb-1">Sender: `+ farmer +`g</p>
              </a>`;
 
-         currentlyInInventoryTemplate.append(output);
+         currently_in_inventory_template.append(output);
 
      }
    }
@@ -1424,7 +1423,7 @@ App = {
  getRetailerInventory: async (data) => {
    $('#retailer_inventory').empty(); //removes all products currently on screen
 
-   const currentlyInInventoryTemplate = $('#retailer_inventory'); //template that will hold inventory
+   const currently_in_inventory_template = $('#retailer_inventory'); //template that will hold inventory
    var all_products = await App.retailerContract.methods.getLabelLUT(App.account).call();
    //iterate over all products and getting those that have a weight greater than 0 and belong to the current retailer
    for (var i = 0; i < all_products.length; i++) {
@@ -1432,9 +1431,8 @@ App = {
      //get current product info
      const product_weight = await App.retailerContract.methods.getProductWeight(label_id).call();
      const intermediate_id = await App.retailerContract.methods.getIntermediateId(label_id).call();
-     const retailer_address = await App.retailerContract.methods.getProductRetailerAddress(label_id).call();
      var i_int = parseInt(i, 10);
-     if (product_weight > 0 && retailer_address == App.account) {
+     if (product_weight > 0) {
        let product_id = await App.processorContract.methods.getProductId(intermediate_id).call();
        let name = await App.farmContract.methods.getProductName(product_id).call();
        let weight = product_weight;
@@ -1449,8 +1447,7 @@ App = {
                  <p class="mb-1">Weight: `+ weight +`g</p>
              </a>`;
 
-         currentlyInInventoryTemplate.append(output);
-
+         currently_in_inventory_template.append(output);
      }
    }
  }

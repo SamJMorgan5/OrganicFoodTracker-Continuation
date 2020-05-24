@@ -26,7 +26,7 @@ App = {
 
   loadAccount: async() => {
       const accounts = await web3.eth.getAccounts(); //returns array of accounts
-      App.account = accounts[1]; //select a singular array
+      App.account = accounts[0]; //select a singular array
   },
 
   loadFarmerContract: async() => {
@@ -582,11 +582,12 @@ App = {
 		"name": "SendProduct",
 		"type": "event"
 	}] //defines functions within farm contract
-    const farmAddress = '0x3Ce570Eaf36E620619552C2CAc02105696884eD9' //contract address
+    const farmAddress = '0xE131253467bFe85b089851e1D2C511a7F8f5E345' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
+
   getCertifications: async () => {
-    const certficiationsTemplate = $('#certifications'); //template that will hold all certificates belonging to a governing body
+    const certficiations_template = $('#certifications'); //template that will hold all certificates belonging to a governing body
     const governing_body_certificates = await App.farmContract.methods.getGoverningBodiesCertificates(App.account).call();
     for (var i = 0; i < governing_body_certificates.length; i++) {
       var i_int = parseInt(i, 10);
@@ -602,7 +603,7 @@ App = {
                 <p class="mb-1" name="product_id">Name: `+ certificate_name +`</p>
            </a>`;
 
-      certficiationsTemplate.append(output);
+      certficiations_template.append(output);
 
     }
   },
