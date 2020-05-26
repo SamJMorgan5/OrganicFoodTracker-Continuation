@@ -102,20 +102,20 @@ contract Farm {
     
     
     //TODO deal with typestr (possibly userful for composite products)
-    function harvestLivestock(string memory _typeStr, string memory _name, uint _weight, uint _timeSpentOutdoors, string _feedUsed, string _housing) public {
+    function harvestLivestock(string memory _name, uint _weight, uint _timeSpentOutdoors, string _feedUsed, string _housing) public {
         require (farmers[msg.sender].allocated == 1, "Farmer doesn't exist");
         require (products[numberOfProducts].allocated == 0, "Product already exists");
-        products[numberOfProducts] = Product(_typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
+        products[numberOfProducts] = Product("Livestock", _name, _weight, 1, msg.sender); //initialise product object and store in products array 
         organicPropertiesLivestock[numberOfProducts] = OrganicPropertiesLivestock(_timeSpentOutdoors, _feedUsed, _housing); //initialise organic livesotock properties for the current product
         farmers[msg.sender].productLUT.push(numberOfProducts);
         numberOfProducts = numberOfProducts + 1;
         emit Harvest(numberOfProducts, _name, _weight, msg.sender, block.timestamp);
     }
     
-    function harvestProduce(string memory _typeStr, string memory _name, uint _weight, string _pesticideUsed, string _fertiliserUsed) public {
+    function harvestProduce(string memory _name, uint _weight, string _pesticideUsed, string _fertiliserUsed) public {
         require (farmers[msg.sender].allocated == 1, "Farmer doesn't exist");
         require (products[numberOfProducts].allocated == 0, "Product already exists");
-        products[numberOfProducts] = Product(_typeStr, _name, _weight, 1, msg.sender); //initialise product object and store in products array 
+        products[numberOfProducts] = Product("Produce", _name, _weight, 1, msg.sender); //initialise product object and store in products array 
         organicPropertiesProduce[numberOfProducts] = OrganicPropertiesProduce(_pesticideUsed, _fertiliserUsed); //initialise organic produce properties for the current product
         farmers[msg.sender].productLUT.push(numberOfProducts);
         numberOfProducts = numberOfProducts + 1;

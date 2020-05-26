@@ -96,10 +96,6 @@ App = {
 		"constant": false,
 		"inputs": [
 			{
-				"name": "_typeStr",
-				"type": "string"
-			},
-			{
 				"name": "_name",
 				"type": "string"
 			},
@@ -129,10 +125,6 @@ App = {
 	{
 		"constant": false,
 		"inputs": [
-			{
-				"name": "_typeStr",
-				"type": "string"
-			},
 			{
 				"name": "_name",
 				"type": "string"
@@ -605,7 +597,7 @@ App = {
 		"type": "function"
 	}
 ]
-    const farmAddress = '0xE131253467bFe85b089851e1D2C511a7F8f5E345' //contract address
+    const farmAddress = '0xC41aCb7AA6aEb6dD12A9743FabB1C325cfC786ca' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -1242,7 +1234,7 @@ App = {
     } else if (isNaN(weight_int)) {
       alert('weight is not a int');
     } else {
-      await App.farmContract.methods.harvestProduce('Produce', name, weight_int, pesticides_used, fertilisers_used).send({from: App.account, gasLimit: 4712388});
+      await App.farmContract.methods.harvestProduce(name, weight_int, pesticides_used, fertilisers_used).send({from: App.account, gasLimit: 4712388});
       alert('harvested');
     }
 
@@ -1265,7 +1257,7 @@ App = {
     } else if (isNaN(time_spent_outdoors_int)) {
       alert('Please insert a integer in the time spent ourdoors field');
     } else {
-      await App.farmContract.methods.harvestLivestock('Livestock', name, weight_int, time_spent_outdoors_int, feed_used, housing).send({from: App.account, gasLimit: 4712388});
+      await App.farmContract.methods.harvestLivestock(name, weight_int, time_spent_outdoors_int, feed_used, housing).send({from: App.account, gasLimit: 4712388});
       alert('harvested');
     }
   },

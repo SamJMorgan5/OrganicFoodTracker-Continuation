@@ -17,14 +17,26 @@ contract Processor {
     
     mapping (uint => Inventory) inventory; //all products stored here with productId as index
     
-    
     uint latestIntermediateId = 0;
+    
+    struct Incoming {
+        uint productId;
+        uint weight; 
+        uint256 time;
+        address farmerAddress;
+        address processorAddress;
+    }
+    
+    mapping (uint => Incoming) incoming;
+    
+    uint latestIncomingId = 0;
     
     //Structure defining a processor
     struct Processor {
         string name;
         uint8 allocated;
         uint[] intermediateLUT; //look up table to js doesn't have to search through all the inventory
+        uint[] incomingLUT;
     }
     
     mapping (address => Processor) processors; //all processors stored here with address as index
@@ -38,17 +50,21 @@ contract Processor {
         require (processors[msg.sender].allocated == 0, "Already exists");
         processorsLUT.push(msg.sender); //add current address of message sender to the processors look up table 
         uint[] memory productsTMP; //initialise empty array of products 
-        processors[msg.sender] = Processor(_name, 1, productsTMP); //initalise procesor object and store in farmers array
+        uint[] memory incomingLUT;
+        processors[msg.sender] = Processor(_name, 1, productsTMP, incomingLUT); //initalise procesor object and store in farmers array
         emit CreateProcessor(_name);
     }
     
-    function recieveProduct(address _sender, uint _productId, uint _weight) public {
+    function recieveProduct(address _sender, uint _incomingId) public {
         require (processors[msg.sender].allocated == 1, "Processor doesn't exist");
         //If product doesn't exist create new product otherwise add weight to already existing product
         latestIntermediateId++;
-        inventory[latestIntermediateId] = Inventory(_productId, _weight, _sender, msg.sender);
+        uint productId = incoming[_incomingId].productId;
+        uint weight = incoming[_incomingId].weight; 
+        inventory[latestIntermediateId] = Inventory(productId, weight, _sender, msg.sender);
+        delete processors[msg.sender].incomingLUT[_incomingId];
         processors[msg.sender].intermediateLUT.push(latestIntermediateId);
-        emit ProductRecieved(_sender, msg.sender, _productId, _weight, block.timestamp);
+        emit ProductRecieved(_sender, msg.sender, productId, weight, block.timestamp);
         
     }
     
@@ -57,8 +73,34 @@ contract Processor {
         require(inventory[_intermediateId].processorAddress == msg.sender, "You do not own this product");
         require (inventory[_intermediateId].weight > 0, "Not in stock");
         inventory[_intermediateId].weight = inventory[_intermediateId].weight - _weight; //removes weight sent from current weight
+        delete processors[msg.sender].intermediateLUT[_intermediateId];
         emit ProductSent(msg.sender, _reciever, _intermediateId, _weight, block.timestamp);
     }
+    
+    function incomingProduct(uint _productId, uint _weight, address _processorAddress) public {
+        latestIncomingId++;
+        incoming[latestIncomingId] = Incoming(_productId, _weight, block.timestamp, _processorAddress, msg.sender);
+        processors[msg.sender].incomingLUT.push(latestIncomingId);
+        
+    }
+    
+    //Incoming---------------------------------------------------------------------------------
+    function getIncomingProductId(uint _id) external view returns (uint) {
+        return incoming[_id].productId;
+    }
+    
+    function getIncomingWeight(uint _id) external view returns (uint) {
+        return incoming[_id].weight;
+    }
+    
+    function getIncomingTime(uint _id) external view returns (uint256) {
+        return incoming[_id].time;
+    }
+    
+    function getIncomingFarmerAddress(uint _id) external view returns (address) {
+        return incoming[_id].farmerAddress;
+    }
+    //End Incoming------------------------------------------------------------------------------
     
     //Product Getters---------------------------------------------------------------------------
     function getProductProcessorName(address _processorAddress) external view returns (string memory) {
@@ -102,6 +144,10 @@ contract Processor {
     
     function getIntermediateLUT(address _processorAddress) external view returns (uint[]) {
         return processors[_processorAddress].intermediateLUT;
+    }
+    
+    function getIncomingLUT(address _processorAddress) external view returns (uint[]) {
+        return processors[_processorAddress].incomingLUT;
     }
     //End Processor Getters------------------------------------------------------------------
     
