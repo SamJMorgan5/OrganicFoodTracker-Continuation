@@ -62,7 +62,7 @@ contract Processor {
         uint productId = incoming[_incomingId].productId;
         uint weight = incoming[_incomingId].weight; 
         inventory[latestIntermediateId] = Inventory(productId, weight, _sender, msg.sender);
-        delete processors[msg.sender].incomingLUT[_incomingId];
+        delete processors[msg.sender].incomingLUT[findIndexIncoming(msg.sender, _incomingId)];
         processors[msg.sender].intermediateLUT.push(latestIntermediateId);
         emit ProductRecieved(_sender, msg.sender, productId, weight, block.timestamp);
         
@@ -73,7 +73,7 @@ contract Processor {
         require(inventory[_intermediateId].processorAddress == msg.sender, "You do not own this product");
         require (inventory[_intermediateId].weight > 0, "Not in stock");
         inventory[_intermediateId].weight = inventory[_intermediateId].weight - _weight; //removes weight sent from current weight
-        delete processors[msg.sender].intermediateLUT[_intermediateId];
+        delete processors[msg.sender].intermediateLUT[findIndexIntermediate(msg.sender, _intermediateId)];
         emit ProductSent(msg.sender, _reciever, _intermediateId, _weight, block.timestamp);
     }
     
@@ -81,8 +81,23 @@ contract Processor {
         latestIncomingId++;
         incoming[latestIncomingId] = Incoming(_productId, _weight, block.timestamp, _processorAddress, msg.sender);
         processors[msg.sender].incomingLUT.push(latestIncomingId);
-        
     }
+    
+    function findIndexIncoming(address _processorAddress, uint _incomingId) internal view returns (uint) {
+        for (uint i = 0; i < processors[_processorAddress].incomingLUT.length; i++) {
+            if (_incomingId == processors[_processorAddress].incomingLUT[i]) {
+                return i;
+            }
+        }
+    }
+    
+    function findIndexIntermediate(address _processorAddress, uint _intermediateId) internal view returns (uint) {
+        for (uint i = 0; i < processors[_processorAddress].intermediateLUT.length; i++) {
+            if (_intermediateId == processors[_processorAddress].intermediateLUT[i]) {
+                return i;
+            }
+        }
+    }  
     
     //Incoming---------------------------------------------------------------------------------
     function getIncomingProductId(uint _id) external view returns (uint) {

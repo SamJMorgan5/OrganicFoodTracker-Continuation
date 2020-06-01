@@ -24,7 +24,7 @@ App = {
 
   loadAccount: async() => {
       const accounts = await web3.eth.getAccounts(); //returns array of accounts
-      App.account = accounts[2];
+      App.account = accounts[3];
   },
 
   loadAllContracts: async() => {
@@ -598,7 +598,7 @@ App = {
 		"type": "event"
 	}
 ]
-    const farmAddress = '0x6fd8BC399335EAeA320368d7835782CCf8e813D6' //contract address
+    const farmAddress = '0x1B92e653ecD7493ABCA50C8344122F6810Cba52c' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -619,63 +619,16 @@ App = {
 		"type": "function"
 	},
 	{
-		"constant": false,
+		"anonymous": false,
 		"inputs": [
 			{
-				"name": "_reciever",
-				"type": "address"
-			},
-			{
-				"name": "_intermediateId",
-				"type": "uint256"
-			},
-			{
-				"name": "_weight",
-				"type": "uint256"
+				"indexed": false,
+				"name": "_name",
+				"type": "string"
 			}
 		],
-		"name": "sendProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"name": "_sender",
-				"type": "address"
-			},
-			{
-				"name": "_incomingId",
-				"type": "uint256"
-			}
-		],
-		"name": "recieveProduct",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getIncomingFarmerAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
+		"name": "CreateProcessor",
+		"type": "event"
 	},
 	{
 		"constant": false,
@@ -698,279 +651,6 @@ App = {
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getNumberOfProducts",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_address",
-				"type": "address"
-			}
-		],
-		"name": "getProcessorAllocated",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getIncomingLUT",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getProductProcessorName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getNumberOfProcessors",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductProcessorAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductWeight",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getProductId",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getIncomingProductId",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getIncomingWeight",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_count",
-				"type": "uint256"
-			}
-		],
-		"name": "getProcessorAddress",
-		"outputs": [
-			{
-				"name": "",
-				"type": "address"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getIntermediateLUT",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_id",
-				"type": "uint256"
-			}
-		],
-		"name": "getIncomingTime",
-		"outputs": [
-			{
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"name": "_processorAddress",
-				"type": "address"
-			}
-		],
-		"name": "getProcessorName",
-		"outputs": [
-			{
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "CreateProcessor",
-		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -1035,9 +715,329 @@ App = {
 		],
 		"name": "ProductSent",
 		"type": "event"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"name": "_incomingId",
+				"type": "uint256"
+			}
+		],
+		"name": "recieveProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_reciever",
+				"type": "address"
+			},
+			{
+				"name": "_intermediateId",
+				"type": "uint256"
+			},
+			{
+				"name": "_weight",
+				"type": "uint256"
+			}
+		],
+		"name": "sendProduct",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getIncomingFarmerAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getIncomingLUT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getIncomingProductId",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getIncomingTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getIncomingWeight",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getIntermediateLUT",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getNumberOfProcessors",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getNumberOfProducts",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_count",
+				"type": "uint256"
+			}
+		],
+		"name": "getProcessorAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_address",
+				"type": "address"
+			}
+		],
+		"name": "getProcessorAllocated",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getProcessorName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductId",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductProcessorAddress",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_processorAddress",
+				"type": "address"
+			}
+		],
+		"name": "getProductProcessorName",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getProductWeight",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
 	}
 ]
-    const processorAddress = '0x3d368fF83e07d645e25268913B927f6863349647' //contract address
+    const processorAddress = '0x1DA6EeDE3872588549093bA78FF16f0A1589d681' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
 
@@ -1284,7 +1284,7 @@ App = {
 		"name": "ProductRecieved",
 		"type": "event"
 	}]
-    const retailerAddress = '0x4B0F18B0808538612EeA045ef026b834803e9819' //contract address
+    const retailerAddress = '0x5062CA0852b6d8e542B79Abb5646d0ad78581d85' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
 
@@ -1437,32 +1437,34 @@ App = {
    }
 },
 
- getIncomingProducts: async (data) => {
+ getIncomingProductsProcessor: async (data) => {
    $('#processor_incoming').empty(); //removes all products currently on screen
    const incoming_products_template = $('#processor_incoming'); //template that will hold individual harvested products
    var incoming_products = await App.processorContract.methods.getIncomingLUT(App.account).call();
    //iterate over all products and getting those that have a weight greater than 0 and belong to the current farmer
    for (var i = 0; i < incoming_products.length; i++) {
      var incoming_id = incoming_products[i];
-     //get current product info
-     const incoming_product_id = await App.processorContract.methods.getIncomingProductId(incoming_id).call();
-     const incoming_weight = await App.processorContract.methods.getIncomingWeight(incoming_id).call();
-     const time_sent = await App.processorContract.methods.getIncomingTime(incoming_id).call();
-     var date = new Date(time_sent*1000);
-     const farmer_address = await App.processorContract.methods.getIncomingFarmerAddress(incoming_id).call();
-     //product values to be output to the screen
-     let output =
-           `<a href="#" class="list-group-item list-group-item-action" data-toggle="list" role="tab">
-               <div class="d-flex w-100 justify-content-between">
-                 <h5 class="mb-1">Incoming ID: `+ incoming_id +`</h5>
-               </div>
-                 <p class="mb-1">Product ID: `+ incoming_product_id +`</p>
-                 <p class="mb-1">Weight: `+ incoming_weight +`</p>
-                 <p class="mb-1">Time/Date Sent: `+ date +`</p>
-                 <p class="mb-1">Farmer Address: `+ farmer_address +`g</p>
-             </a>`;
+     if (incoming_id > 0) {
+       //get current product info
+       const incoming_product_id = await App.processorContract.methods.getIncomingProductId(incoming_id).call();
+       const incoming_weight = await App.processorContract.methods.getIncomingWeight(incoming_id).call();
+       const time_sent = await App.processorContract.methods.getIncomingTime(incoming_id).call();
+       var date = new Date(time_sent*1000);
+       const farmer_address = await App.processorContract.methods.getIncomingFarmerAddress(incoming_id).call();
+       //product values to be output to the screen
+       let output =
+             `<a href="#" class="list-group-item list-group-item-action" data-toggle="list" role="tab">
+                 <div class="d-flex w-100 justify-content-between">
+                   <h5 class="mb-1">Incoming ID: `+ incoming_id +`</h5>
+                 </div>
+                   <p class="mb-1">Product ID: `+ incoming_product_id +`</p>
+                   <p class="mb-1">Weight: `+ incoming_weight +`</p>
+                   <p class="mb-1">Time/Date Sent: `+ date +`</p>
+                   <p class="mb-1">Farmer Address: `+ farmer_address +`g</p>
+               </a>`;
 
-      incoming_products_template.append(output);
+        incoming_products_template.append(output);
+    }
 
   }
  },
@@ -1470,15 +1472,16 @@ App = {
 
  recieveProductProcessor: async (data) => {
    //read all values inputted by user in the processor_homepage.html form
-   var incoming_id = items[0].firstChild.nextElementSibling.innerText.slice(14); //TODO change to read incoming id from selected element in list
+   var items = document.getElementsByClassName("list-group-item active");
+   var incoming_id = items[0].firstChild.nextElementSibling.innerText.slice(13); //TODO change to read incoming id from selected element in list
    const incoming_weight = await App.processorContract.methods.getIncomingWeight(incoming_id).call();
-   var product_id_int = parseInt(product_id, 10);
    var incoming_weight_int = parseInt(incoming_weight, 10);
+   var incoming_id_int = parseInt(incoming_id, 10);
    if ((incoming_id == ""|| incoming_weight == "") || isNaN(incoming_weight_int) || isNaN(incoming_id_int)){
      alert('invalid input');
    } else {
      let sender = await App.processorContract.methods.getIncomingFarmerAddress(incoming_id_int).call(); //get sender address
-     await App.processorContract.methods.recieveProduct(sender, incoming_id).send({from: App.account, gasLimit: 4712388});
+     await App.processorContract.methods.recieveProduct(sender, incoming_id_int).send({from: App.account, gasLimit: 4712388});
      alert('received');
    }
  },
