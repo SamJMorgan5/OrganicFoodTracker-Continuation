@@ -73,13 +73,15 @@ contract Processor {
         require(inventory[_intermediateId].processorAddress == msg.sender, "You do not own this product");
         require (inventory[_intermediateId].weight > 0, "Not in stock");
         inventory[_intermediateId].weight = inventory[_intermediateId].weight - _weight; //removes weight sent from current weight
-        delete processors[msg.sender].intermediateLUT[findIndexIntermediate(msg.sender, _intermediateId)];
+        if (inventory[_intermediateId].weight == 0) {
+            delete processors[msg.sender].intermediateLUT[findIndexIntermediate(msg.sender, _intermediateId)];
+        }
         emit ProductSent(msg.sender, _reciever, _intermediateId, _weight, block.timestamp);
     }
     
     function incomingProduct(uint _productId, uint _weight, address _processorAddress) public {
         latestIncomingId++;
-        incoming[latestIncomingId] = Incoming(_productId, _weight, block.timestamp, _processorAddress, msg.sender);
+        incoming[latestIncomingId] = Incoming(_productId, _weight, block.timestamp, msg.sender, _processorAddress);
         processors[msg.sender].incomingLUT.push(latestIncomingId);
     }
     
