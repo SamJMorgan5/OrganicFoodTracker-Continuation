@@ -5,36 +5,35 @@
 App = {
   contracts: {},
 
-  load: async () => {
-    await App.loadWeb3() //imports web3 into the file
-    await App.loadAccount() //sets default account
-    await App.loadAllContracts() //load all contracts from the blockchain
-    document.getElementById("current_address").innerHTML = App.account; //parses current address to html
-    //sawait App.getIncomingProducts()
-  },
+load: async () => {
+  await App.loadWeb3() //imports web3 into the file
+  await App.loadAccount() //sets default account
+  await App.loadAllContracts() //load all contracts from the blockchain
+  document.getElementById("current_address").innerHTML = App.account; //parses current address to html
+  //sawait App.getIncomingProducts()
+},
 
-  loadWeb3: async() => {
-    if (typeof web3 !== 'undefined') {
-			web3 = new Web3(web3.currentProvider);
-		} else {
-			web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-		}
+loadWeb3: async() => {
+  if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);
+	} else {
+		web3 = new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
+	}
+},
 
-  },
+loadAccount: async() => {
+  const accounts = await web3.eth.getAccounts(); //returns array of accounts
+  App.account = accounts[3];
+},
 
-  loadAccount: async() => {
-      const accounts = await web3.eth.getAccounts(); //returns array of accounts
-      App.account = accounts[3];
-  },
+loadAllContracts: async() => {
+  await App.loadFarmerContract()
+  await App.loadProcessorContract()
+  await App.loadRetailerContract()
+},
 
-  loadAllContracts: async() => {
-    await App.loadFarmerContract()
-    await App.loadProcessorContract()
-    await App.loadRetailerContract()
-  },
-
-  loadFarmerContract: async() => {
-    const farmAbi = [
+loadFarmerContract: async() => {
+  const farmAbi = [
 	{
 		"constant": true,
 		"inputs": [],
@@ -598,12 +597,12 @@ App = {
 		"type": "event"
 	}
 ]
-    const farmAddress = '0x7A0037761C92Efe55eF7A90c63338ED83Dc0530a' //contract address
-    App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
-  },
+  const farmAddress = '0x53F43A4c059ddBD20439c732a33F73bdE6cDD3e2' //contract address
+  App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
+},
 
-  loadProcessorContract: async() => {
-    const processorAbi = [
+loadProcessorContract: async() => {
+  const processorAbi = [
 	{
 		"constant": false,
 		"inputs": [
@@ -1037,12 +1036,12 @@ App = {
 		"type": "function"
 	}
 ]
-    const processorAddress = '0x1123A7A8d2a184EdC4012748B70305e119a38c48' //contract address
-    App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
-  },
+  const processorAddress = '0xA95dA2AaA3c5487559E3e950777BE44D24a5a398' //contract address
+  App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
+},
 
-  loadRetailerContract: async() => {
-    const retailerAbi = [
+loadRetailerContract: async() => {
+  const retailerAbi = [
 	{
 		"constant": false,
 		"inputs": [
@@ -1398,129 +1397,128 @@ App = {
 		"type": "function"
 	}
 ]
-    const retailerAddress = '0x9770cA0f856933244FA84Dd39224cde3F06D2305' //contract address
-    App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
-  },
+  const retailerAddress = '0x8ea9D1B444336471A77f2567f15FFeC12C9ab25c' //contract address
+  App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
+},
 
-  createFarmer: async (data) => {
-    let name = $('[name="farmer_name"]').val();
-    const allocated = await App.farmContract.methods.getFarmerAllocated(App.account).call();
-    if (name == "") {
-      alert('name field can not be empty');
+createFarmer: async (data) => {
+  let name = $('[name="farmer_name"]').val();
+  const allocated = await App.farmContract.methods.getFarmerAllocated(App.account).call();
+  if (name == "") {
+    alert('name field can not be empty');
+  } else {
+    //if farmrer isn't currently allocated create new farmer otherise throw alert
+    if (allocated == "0") {
+      await App.farmContract.methods.createFarmer(name).send({from: App.account, gasLimit: 4712388});
+      alert('created farmer');
     } else {
-      //if farmrer isn't currently allocated create new farmer otherise throw alert
-      if (allocated == "0") {
-        await App.farmContract.methods.createFarmer(name).send({from: App.account, gasLimit: 4712388});
-        alert('created farmer');
-      } else {
-        alert('farmer already exists');
+      alert('farmer already exists');
+    }
+  }
+},
+
+createProcessor: async (data) => {
+  let name = $('[name="processor_name"]').val();
+  const allocated = await App.processorContract.methods.getProcessorAllocated(App.account).call();
+  if (name == "") {
+    alert('name field can not be empty');
+  } else {
+    //if processor isn't currently allocated create new farmer otherise throw alert
+    if (allocated == "0") {
+      await App.processorContract.methods.createProcessor(name).send({from: App.account, gasLimit: 4712388});
+      alert('created processor');
+    } else {
+      alert('processor already exists');
+    }
+  }
+},
+
+createRetailer: async (data) => {
+  let name = $('[name="retailer_name"]').val();
+  const allocated = await App.retailerContract.methods.getRetailerAllocated(App.account).call();
+  if (name == "") {
+    alert('name field can not be empty');
+  } else {
+  //if retailer isn't currently allocated create new farmer otherise throw alert
+    if (allocated == "0") {
+      await App.retailerContract.methods.createRetailer(name).send({from: App.account, gasLimit: 4712388});
+      alert('created retailer');
+    } else {
+      alert('retailer already exists');
+    }
+  }
+},
+
+harvestProduce: async (data) => {
+  //read all values inputted by user in the farmer_homepage.html form
+  let name = $('[name="produce_name"]').val();
+  let weight = $('[name="produce_weight"]').val();
+  let pesticides_used = $('[name="pesticides_used"]').val();
+  let fertilisers_used = $('[name="fertilisers_used"]').val();
+  var weight_int = parseInt(weight, 10);
+  //check if input is valid, if input is valid add product to farmer inventory
+  if (name == "" || weight == "") {
+    alert('weight or name is empty');
+  } else if (isNaN(weight_int)) {
+    alert('weight is not a int');
+  } else {
+    await App.farmContract.methods.harvestProduce(name, weight_int, pesticides_used, fertilisers_used).send({from: App.account, gasLimit: 4712388});
+    alert('harvested');
+  }
+},
+
+harvestLivestock: async (data) => {
+  //read all values inputted by user in the farmer_homepage.html form
+  let name = $('[name="livestock_name"]').val();
+  let weight = $('[name="livestock_weight"]').val();
+  let time_spent_outdoors = $('[name="time_spent_outdoors"]').val();
+  let feed_used = $('[name="feed_used"]').val();
+  let housing = $('[name="housing"]').val();
+  var weight_int = parseInt(weight, 10);
+  var time_spent_outdoors_int = parseInt(time_spent_outdoors, 10);
+  //check if input is valid, if input is valid add product to farmer inventory
+  if (name == "" || weight == "") {
+    alert('weight or name is empty');
+  } else if (isNaN(weight_int)) {
+    alert('Please insert a integer in the weight field');
+  } else if (isNaN(time_spent_outdoors_int)) {
+    alert('Please insert a integer in the time spent ourdoors field');
+  } else {
+    await App.farmContract.methods.harvestLivestock(name, weight_int, time_spent_outdoors_int, feed_used, housing).send({from: App.account, gasLimit: 4712388});
+    alert('harvested');
+  }
+},
+
+sendProductFarm: async (data) => {
+  var items = document.getElementsByClassName("list-group-item active"); //get currently activated list item in farmer_homepage.html
+  var product_id = items[0].firstChild.nextElementSibling.innerText.slice(4); //slice first 4 characters giving the product_id
+  var product_id_int = parseInt(product_id, 10);
+  //read all values inputted by user in the farmer_homepage.html form
+  let reciever = $('[name="reciever"]').val();
+  let weight = $('[name="send_weight"]').val();
+  var weight_int = parseInt(weight, 10);
+  //check if input is valid, if input is valid send desired amount of selected product to the reciever
+  if ((reciever == ""|| weight == "") || isNaN(weight_int)) {
+    alert('insufficient values');
+  } else {
+    const allocated = await App.processorContract.methods.getProcessorAllocated(reciever).call();
+    const inventory_weight = await App.farmContract.methods.getProductWeight(product_id_int).call();
+    var inventory_weight_int = parseInt(inventory_weight);
+    if (inventory_weight_int < weight_int) {
+      alert('insert valid weight');
+    } else {
+      if (allocated == '0') {
+        alert('not allocated');
+      } else if (allocated == '1') {
+        await App.farmContract.methods.sendProduct(reciever, product_id_int, weight_int).send({from: App.account, gasLimit: 4712388});
+        await App.processorContract.methods.incomingProduct(product_id_int, weight_int, reciever).send({from: App.account, gasLimit: 4712388});
+        alert('sent');
       }
     }
-  },
+  }
+},
 
-  createProcessor: async (data) => {
-    let name = $('[name="processor_name"]').val();
-    const allocated = await App.processorContract.methods.getProcessorAllocated(App.account).call();
-    if (name == "") {
-      alert('name field can not be empty');
-    } else {
-      //if processor isn't currently allocated create new farmer otherise throw alert
-      if (allocated == "0") {
-        await App.processorContract.methods.createProcessor(name).send({from: App.account, gasLimit: 4712388});
-        alert('created processor');
-      } else {
-        alert('processor already exists');
-      }
-    }
-  },
-
-  createRetailer: async (data) => {
-    let name = $('[name="retailer_name"]').val();
-    const allocated = await App.retailerContract.methods.getRetailerAllocated(App.account).call();
-    if (name == "") {
-      alert('name field can not be empty');
-    } else {
-    //if retailer isn't currently allocated create new farmer otherise throw alert
-      if (allocated == "0") {
-        await App.retailerContract.methods.createRetailer(name).send({from: App.account, gasLimit: 4712388});
-        alert('created retailer');
-      } else {
-        alert('retailer already exists');
-      }
-    }
-  },
-
-  harvestProduce: async (data) => {
-    //read all values inputted by user in the farmer_homepage.html form
-    let name = $('[name="produce_name"]').val();
-    let weight = $('[name="produce_weight"]').val();
-    let pesticides_used = $('[name="pesticides_used"]').val();
-    let fertilisers_used = $('[name="fertilisers_used"]').val();
-    var weight_int = parseInt(weight, 10);
-    //check if input is valid, if input is valid add product to farmer inventory
-    if (name == "" || weight == "") {
-      alert('weight or name is empty');
-    } else if (isNaN(weight_int)) {
-      alert('weight is not a int');
-    } else {
-      await App.farmContract.methods.harvestProduce(name, weight_int, pesticides_used, fertilisers_used).send({from: App.account, gasLimit: 4712388});
-      alert('harvested');
-    }
-
-  },
-
-  harvestLivestock: async (data) => {
-    //read all values inputted by user in the farmer_homepage.html form
-    let name = $('[name="livestock_name"]').val();
-    let weight = $('[name="livestock_weight"]').val();
-    let time_spent_outdoors = $('[name="time_spent_outdoors"]').val();
-    let feed_used = $('[name="feed_used"]').val();
-    let housing = $('[name="housing"]').val();
-    var weight_int = parseInt(weight, 10);
-    var time_spent_outdoors_int = parseInt(time_spent_outdoors, 10);
-    //check if input is valid, if input is valid add product to farmer inventory
-    if (name == "" || weight == "") {
-      alert('weight or name is empty');
-    } else if (isNaN(weight_int)) {
-      alert('Please insert a integer in the weight field');
-    } else if (isNaN(time_spent_outdoors_int)) {
-      alert('Please insert a integer in the time spent ourdoors field');
-    } else {
-      await App.farmContract.methods.harvestLivestock(name, weight_int, time_spent_outdoors_int, feed_used, housing).send({from: App.account, gasLimit: 4712388});
-      alert('harvested');
-    }
-  },
-
-  sendProductFarm: async (data) => {
-    var items = document.getElementsByClassName("list-group-item active"); //get currently activated list item in farmer_homepage.html
-    var product_id = items[0].firstChild.nextElementSibling.innerText.slice(4); //slice first 4 characters giving the product_id
-    var product_id_int = parseInt(product_id, 10);
-    //read all values inputted by user in the farmer_homepage.html form
-    let reciever = $('[name="reciever"]').val();
-    let weight = $('[name="send_weight"]').val();
-    var weight_int = parseInt(weight, 10);
-    //check if input is valid, if input is valid send desired amount of selected product to the reciever
-    if ((reciever == ""|| weight == "") || isNaN(weight_int)) {
-      alert('insufficient values');
-    } else {
-      const allocated = await App.processorContract.methods.getProcessorAllocated(reciever).call();
-      const inventory_weight = await App.farmContract.methods.getProductWeight(product_id_int).call();
-      var inventory_weight_int = parseInt(inventory_weight);
-      if (inventory_weight_int < weight_int) {
-        alert('insert valid weight');
-      } else {
-        if (allocated == '0') {
-          alert('not allocated');
-        } else if (allocated == '1') {
-          await App.farmContract.methods.sendProduct(reciever, product_id_int, weight_int).send({from: App.account, gasLimit: 4712388});
-          await App.processorContract.methods.incomingProduct(product_id_int, weight_int, reciever).send({from: App.account, gasLimit: 4712388});
-          alert('sent');
-        }
-      }
-    }
-  },
-
- getHarvestedProducts: async (data) => {
+getHarvestedProducts: async (data) => {
    $('#currently_harvested').empty(); //removes all products currently on screen
    const currently_harvested_template = $('#currently_harvested'); //template that will hold individual harvested products
    var all_products = await App.farmContract.methods.getProductLUT(App.account).call();
@@ -1551,7 +1549,7 @@ App = {
    }
 },
 
- getIncomingProductsProcessor: async (data) => {
+getIncomingProductsProcessor: async (data) => {
    $('#processor_incoming').empty(); //removes all products currently on screen
    const incoming_products_template = $('#processor_incoming'); //template that will hold individual harvested products
    var incoming_products = await App.processorContract.methods.getIncomingLUT(App.account).call();
@@ -1578,13 +1576,11 @@ App = {
                </a>`;
 
         incoming_products_template.append(output);
+      }
     }
+},
 
-  }
- },
-
-
- recieveProductProcessor: async (data) => {
+recieveProductProcessor: async (data) => {
    //read all values inputted by user in the processor_homepage.html form
    var items = document.getElementsByClassName("list-group-item active");
    var incoming_id = items[0].firstChild.nextElementSibling.innerText.slice(13); //TODO change to read incoming id from selected element in list
@@ -1598,9 +1594,9 @@ App = {
      await App.processorContract.methods.recieveProduct(sender, incoming_id_int).send({from: App.account, gasLimit: 4712388});
      alert('received');
    }
- },
+},
 
- sendProductProcessor: async (data) => {
+sendProductProcessor: async (data) => {
    var items = document.getElementsByClassName("list-group-item active"); //get currently activated list item in processor_homepage.html
    var intermediate_id = items[0].firstChild.nextElementSibling.innerText.slice(17); //slice first 4 characters giving the product_id
    var intermediate_id_int = parseInt(intermediate_id, 10);
@@ -1625,12 +1621,12 @@ App = {
          await App.processorContract.methods.sendProduct(reciever, intermediate_id_int, weight_int).send({from: App.account, gasLimit: 4712388});
          await App.retailerContract.methods.incomingProduct(intermediate_id_int, weight_int, reciever).send({from: App.account, gasLimit: 4712388});
          alert('sent to');
-       }
       }
     }
- },
+  }
+},
 
- getProcessorInventory: async (data) => {
+getProcessorInventory: async (data) => {
    $('#processor_inventory').empty(); //removes all products currently on screen
    const currently_in_inventory_template = $('#processor_inventory'); //template that will hold inventory
    var all_products = await App.processorContract.methods.getIntermediateLUT(App.account).call();
@@ -1662,7 +1658,7 @@ App = {
    }
  },
 
- getIncomingProductsRetailer: async (data) => {
+getIncomingProductsRetailer: async (data) => {
    $('#retailer_incoming').empty(); //removes all products currently on screen
    const incoming_products_template = $('#retailer_incoming'); //template that will hold individual harvested products
    var incoming_products = await App.retailerContract.methods.getIncomingLUT(App.account).call();
@@ -1692,9 +1688,9 @@ App = {
     }
 
   }
- },
+},
 
- recieveProductRetailer: async (data) => {
+recieveProductRetailer: async (data) => {
    //read all values inputted by user in the processor_homepage.html form
    var items = document.getElementsByClassName("list-group-item active");
    var incoming_id = items[0].firstChild.nextElementSibling.innerText.slice(13); //TODO change to read incoming id from selected element in list
@@ -1708,9 +1704,9 @@ App = {
      await App.retailerContract.methods.recieveProduct(sender, incoming_id_int).send({from: App.account, gasLimit: 4712388});
      alert('received');
    }
- },
+},
 
- getRetailerInventory: async (data) => {
+getRetailerInventory: async (data) => {
    $('#retailer_inventory').empty(); //removes all products currently on screen
 
    const currently_in_inventory_template = $('#retailer_inventory'); //template that will hold inventory

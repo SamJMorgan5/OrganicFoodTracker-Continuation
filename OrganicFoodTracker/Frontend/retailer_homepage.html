@@ -50,6 +50,8 @@
           </div>
       </div>
     </nav>
+
+    <div class="container">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="App.getIncomingProductsRetailer()">
       Incoming Products
     </button>
@@ -74,15 +76,6 @@
         </div>
       </div>
     </div>
-
-    <div class="container">
-      <div class="pt-4"></div>
-      <div class="jumbotron">
-        <h4>Receive a Product</h4>
-        <input type="text" name="intermediate_id" aria-label="Intermediate" placeholder="Intermediate ID" class="form-control">
-        <input type="text"  name="retailer_weight" aria-label="Weight" placeholder="Weight (g)" class="form-control">
-        <div class="pt-2"><button type="button" class="btn btn-secondary" onclick="App.recieveProductRetailer()">Recieve</button></div>
-      </div>
 
       <h4>Inventory</h4>
       <div class="list-group" id="retailer_inventory">

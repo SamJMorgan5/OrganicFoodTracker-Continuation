@@ -582,7 +582,7 @@ App = {
 		"name": "SendProduct",
 		"type": "event"
 	}] //defines functions within farm contract
-    const farmAddress = '0xE131253467bFe85b089851e1D2C511a7F8f5E345' //contract address
+    const farmAddress = '0x53F43A4c059ddBD20439c732a33F73bdE6cDD3e2' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 

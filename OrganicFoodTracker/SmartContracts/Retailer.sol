@@ -13,6 +13,7 @@ contract Retailer {
         uint weight;
         address processorAddress;
         address retailerAddress; //owner of product
+        uint allocated; 
     }
 
     uint latestLabelId = 0;
@@ -64,7 +65,7 @@ contract Retailer {
         latestLabelId++;
         uint intermediateId = incoming[_incomingId].intermediateId;
         uint weight = incoming[_incomingId].weight; 
-        inventory[latestLabelId] = Inventory(intermediateId, weight, _sender, msg.sender); //crate new product object and store in products mapping
+        inventory[latestLabelId] = Inventory(intermediateId, weight, _sender, msg.sender, 1); //crate new product object and store in products mapping
         delete retailers[msg.sender].incomingLUT[findIndexIncoming(msg.sender, _incomingId)];
         retailers[msg.sender].labelLUT.push(latestLabelId);
         emit ProductRecieved(_sender, msg.sender, latestLabelId, weight, block.timestamp);
@@ -120,6 +121,10 @@ contract Retailer {
 
     function getIntermediateId(uint _label) external view returns (uint) {
         return inventory[_label].intermediateId;
+    }
+    
+    function getAllocated(uint _label) external view returns (uint) {
+        return inventory[_label].allocated;
     }
     //end product getters --------------------------------------------------------------------------
 

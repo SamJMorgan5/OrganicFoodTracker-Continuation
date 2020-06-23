@@ -599,7 +599,7 @@ App = {
 		"type": "function"
 	}
 ]
-    const farmAddress = '0xE131253467bFe85b089851e1D2C511a7F8f5E345' //contract address
+    const farmAddress = '0x53F43A4c059ddBD20439c732a33F73bdE6cDD3e2' //contract address
     App.farmContract = new web3.eth.Contract(farmAbi, farmAddress);
   },
 
@@ -924,7 +924,7 @@ App = {
 		"name": "ProductSent",
 		"type": "event"
 	}]
-    const processorAddress = '0x476e3c1996d9d26197638b720F35C4a9f4cDaC50' //contract address
+    const processorAddress = '0xA95dA2AaA3c5487559E3e950777BE44D24a5a398' //contract address
     App.processorContract = new web3.eth.Contract(processorAbi, processorAddress);
   },
 
@@ -1171,10 +1171,10 @@ App = {
 		"name": "ProductRecieved",
 		"type": "event"
 	}]
-    const retailerAddress = '0x0C3FC850f86Ea6A3338536a64825E17E119b920E' //contract address
+    const retailerAddress = '0x8ea9D1B444336471A77f2567f15FFeC12C9ab25c' //contract address
     App.retailerContract = new web3.eth.Contract(retailerAbi, retailerAddress);
   },
-  
+
   organicProperties: async() => {
     //gets label value inserted by a user
     var label = $('[name="label"]').val();
